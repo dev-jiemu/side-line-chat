@@ -1,0 +1,89 @@
+2025-06-13 21:10:09.185934+09:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE [*]user (\000d\000a    user_id VARCHAR(50) PRIMARY KEY,\000d\000a    password VARCHAR(255),\000d\000a    auth_type VARCHAR(20), -- 'observer', 'contact' 등\000d\000a    created_at TIMESTAMP,\000d\000a    delete_yn CHAR(1) -- 'Y' or 'N'\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE user (
+    user_id VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(255),
+    auth_type VARCHAR(20), -- 'observer', 'contact' 등
+    created_at TIMESTAMP,
+    delete_yn CHAR(1) -- 'Y' or 'N'
+) [42001-232]
+2025-06-13 21:10:09.194987+09:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE chat_room (\000d\000a    room_id BIGINT PRIMARY KEY,\000d\000a    contact_id VARCHAR(50), -- FK to user(user_id)\000d\000a    room_type VARCHAR(10), -- 'main' or 'side'\000d\000a    created_at TIMESTAMP,\000d\000a    closed_at TIMESTAMP, -- 종료 시각\000d\000a    delete_yn CHAR(1), -- 'Y' or 'N'\000d\000a    FOREIGN KEY (contact_id) REFERENCES [*]user(user_id)\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE chat_room (
+    room_id BIGINT PRIMARY KEY,
+    contact_id VARCHAR(50), -- FK to user(user_id)
+    room_type VARCHAR(10), -- 'main' or 'side'
+    created_at TIMESTAMP,
+    closed_at TIMESTAMP, -- 종료 시각
+    delete_yn CHAR(1), -- 'Y' or 'N'
+    FOREIGN KEY (contact_id) REFERENCES user(user_id)
+) [42001-232]
+2025-06-13 21:10:09.196826+09:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE chat_room_link (\000d\000a    user_id VARCHAR(50), -- main 방 기준 user_id\000d\000a    side_room_id BIGINT, -- 연결된 side 채팅방 room_id\000d\000a    delete_yn CHAR(1), -- 'Y' or 'N'\000d\000a    PRIMARY KEY (user_id, side_room_id),\000d\000a    FOREIGN KEY (user_id) REFERENCES [*]user(user_id),\000d\000a    FOREIGN KEY (side_room_id) REFERENCES chat_room(room_id)\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE chat_room_link (
+    user_id VARCHAR(50), -- main 방 기준 user_id
+    side_room_id BIGINT, -- 연결된 side 채팅방 room_id
+    delete_yn CHAR(1), -- 'Y' or 'N'
+    PRIMARY KEY (user_id, side_room_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (side_room_id) REFERENCES chat_room(room_id)
+) [42001-232]
+2025-06-13 21:10:09.200555+09:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CHAT_ROOM" not found; SQL statement:
+CREATE TABLE chat_log (
+    log_seqno BIGINT PRIMARY KEY AUTO_INCREMENT,
+    room_id BIGINT, -- FK to chat_room(room_id)
+    message VARCHAR(1000),
+    sent_at TIMESTAMP, -- 전송 시각
+    delete_yn CHAR(1), -- 'Y' or 'N'
+    FOREIGN KEY (room_id) REFERENCES chat_room(room_id)
+) [42102-232]
+2025-06-13 21:10:16.518081+09:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE [*]user (\000d\000a    user_id VARCHAR(50) PRIMARY KEY,\000d\000a    password VARCHAR(255),\000d\000a    auth_type VARCHAR(20), -- 'observer', 'contact' 등\000d\000a    created_at TIMESTAMP,\000d\000a    delete_yn CHAR(1) -- 'Y' or 'N'\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE user (
+    user_id VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(255),
+    auth_type VARCHAR(20), -- 'observer', 'contact' 등
+    created_at TIMESTAMP,
+    delete_yn CHAR(1) -- 'Y' or 'N'
+) [42001-232]
+2025-06-13 21:10:16.519854+09:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE chat_room (\000d\000a    room_id BIGINT PRIMARY KEY,\000d\000a    contact_id VARCHAR(50), -- FK to user(user_id)\000d\000a    room_type VARCHAR(10), -- 'main' or 'side'\000d\000a    created_at TIMESTAMP,\000d\000a    closed_at TIMESTAMP, -- 종료 시각\000d\000a    delete_yn CHAR(1), -- 'Y' or 'N'\000d\000a    FOREIGN KEY (contact_id) REFERENCES [*]user(user_id)\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE chat_room (
+    room_id BIGINT PRIMARY KEY,
+    contact_id VARCHAR(50), -- FK to user(user_id)
+    room_type VARCHAR(10), -- 'main' or 'side'
+    created_at TIMESTAMP,
+    closed_at TIMESTAMP, -- 종료 시각
+    delete_yn CHAR(1), -- 'Y' or 'N'
+    FOREIGN KEY (contact_id) REFERENCES user(user_id)
+) [42001-232]
+2025-06-13 21:10:16.520702+09:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE chat_room_link (\000d\000a    user_id VARCHAR(50), -- main 방 기준 user_id\000d\000a    side_room_id BIGINT, -- 연결된 side 채팅방 room_id\000d\000a    delete_yn CHAR(1), -- 'Y' or 'N'\000d\000a    PRIMARY KEY (user_id, side_room_id),\000d\000a    FOREIGN KEY (user_id) REFERENCES [*]user(user_id),\000d\000a    FOREIGN KEY (side_room_id) REFERENCES chat_room(room_id)\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE chat_room_link (
+    user_id VARCHAR(50), -- main 방 기준 user_id
+    side_room_id BIGINT, -- 연결된 side 채팅방 room_id
+    delete_yn CHAR(1), -- 'Y' or 'N'
+    PRIMARY KEY (user_id, side_room_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id),
+    FOREIGN KEY (side_room_id) REFERENCES chat_room(room_id)
+) [42001-232]
+2025-06-13 21:10:16.521747+09:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CHAT_ROOM" not found; SQL statement:
+CREATE TABLE chat_log (
+    log_seqno BIGINT PRIMARY KEY AUTO_INCREMENT,
+    room_id BIGINT, -- FK to chat_room(room_id)
+    message VARCHAR(1000),
+    sent_at TIMESTAMP, -- 전송 시각
+    delete_yn CHAR(1), -- 'Y' or 'N'
+    FOREIGN KEY (room_id) REFERENCES chat_room(room_id)
+) [42102-232]
+2025-06-13 21:11:46.999609+09:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "CREATE TABLE [*]user (\000d\000a    user_id VARCHAR(50) PRIMARY KEY,\000d\000a    password VARCHAR(255),\000d\000a    auth_type VARCHAR(20),\000d\000a    created_at TIMESTAMP,\000d\000a    delete_yn CHAR(1)\000d\000a)"; expected "identifier"; SQL statement:
+CREATE TABLE user (
+    user_id VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(255),
+    auth_type VARCHAR(20),
+    created_at TIMESTAMP,
+    delete_yn CHAR(1)
+) [42001-232]

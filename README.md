@@ -38,3 +38,11 @@ CREATE TABLE chat_log (
 
 
 ### 2. Backend API Endpoints
+
+| Endpoint           | Method | Description              |
+|--------------------|--------|--------------------------|
+| /user/login        | POST   | 계정 로그인 요청                |
+| /room              | POST   | 메인 채팅방 생성 (일반 사용자 -> 상담사) |
+| /room/:id          | POST   | 사이드 채팅방 생성 (옵저버 -> 상담사)  |
+| /room/:id          | DELETE | 메인 채팅방 삭제                |
+| /room/:id/:side_id | DELETE | 사이드 채팅방 삭제               |
