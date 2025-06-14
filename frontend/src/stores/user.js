@@ -34,7 +34,19 @@ export const useUserStore = defineStore('user', () => {
         return userInfo.value.authType === 'observer' || userInfo.value.authType === 'contact'
     })
 
+    const randomUserIdForCustomer = () => {
+        const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+
+        return result
+    }
+
     return {
         roomList, userInfo, login, isContact,
+        randomUserIdForCustomer,
     }
 })

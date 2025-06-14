@@ -3,16 +3,17 @@ import axios from 'axios'
 const baseUrl = import.meta.env.VITE_API_BASE_URL
 
 export default {
-    login(userInfo, scb, fcb) {
-        let reqUrl = '/user/login'
+    createRoom(req, scb, fcb) {
+        let reqUrl = '/room'
 
-        axios.get(baseUrl + reqUrl, {
+        console.log(baseUrl)
+
+        axios.post(baseUrl + reqUrl, req, {
             headers: {
                 "Content-Type": "application/json",
             }
-        }).then(response => {
-            console.log('axios result : ', response)
-            if (response.status === 200) {
+        }).then((response) => {
+            if (response.status === 200) { // room id 반환됨
                 if(scb) {
                     scb(response.data)
                 }
@@ -21,7 +22,7 @@ export default {
                     fcb(response.data)
                 }
             }
-        }).catch(error => {
+        }).catch((error) => {
             console.error('axios error : ', error)
         })
     }

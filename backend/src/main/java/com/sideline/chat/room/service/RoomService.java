@@ -1,6 +1,6 @@
 package com.sideline.chat.room.service;
 
-import com.sideline.chat.room.entity.Room;
+import com.sideline.chat.room.entity.ChatRoom;
 import com.sideline.chat.room.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,23 +15,24 @@ public class RoomService {
     private RoomRepository roomRepository;
 
     // 상담사별 진행중인 메인 채팅 리스트 조회
-    public List<Room> getMainRoomListForContactId(String contactId) {
+    public List<ChatRoom> getMainRoomListForContactId(String contactId) {
         return roomRepository.findRoomByContactIdAndDeleteYnAndRoomType(contactId, "N", "main");
     }
 
     // room id 로 조회
-    public Room getRoomOne(Long roomId) {
+    public ChatRoom getRoomOne(Long roomId) {
         return roomRepository.findRoomByRoomIdAndDeleteYn(roomId, "N");
     }
 
-    public Room createRoom(String contactId, String roomType) {
-        Room room = new Room();
+    public ChatRoom createRoom(String contactId, String senderId, String roomType) {
+        ChatRoom chatRoom = new ChatRoom();
 
-        room.setContactId(contactId);
-        room.setRoomType(roomType);
-        room.setCreatedAt(LocalDateTime.now());
-        room.setDeleteYn("N");
+        chatRoom.setContactId(contactId);
+        chatRoom.setSenderId(senderId);
+        chatRoom.setRoomType(roomType);
+        chatRoom.setCreatedAt(LocalDateTime.now());
+        chatRoom.setDeleteYn("N");
 
-        return roomRepository.save(room);
+        return roomRepository.save(chatRoom);
     }
 }

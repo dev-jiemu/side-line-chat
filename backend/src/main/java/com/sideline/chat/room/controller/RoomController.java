@@ -1,9 +1,8 @@
 package com.sideline.chat.room.controller;
 
-import com.sideline.chat.room.dto.ChatRoom;
 import com.sideline.chat.room.dto.RoomRequest;
 import com.sideline.chat.room.dto.RoomResponse;
-import com.sideline.chat.room.entity.Room;
+import com.sideline.chat.room.entity.ChatRoom;
 import com.sideline.chat.room.service.RoomService;
 import com.sideline.chat.common.dto.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +19,9 @@ public class RoomController {
     private RoomService roomService;
 
     @Autowired
-    private ChatRoom chatRoom;
+    private com.sideline.chat.room.dto.ChatRoom chatRoom;
 
-    // TODO : log service, room-link service
+    // TODO : room-link service
 
     @GetMapping(value="/{id}")
     public ResponseEntity<BaseResponse> getRoom(@PathVariable String id){
@@ -59,24 +58,40 @@ public class RoomController {
         }
 
         // 상담원 user_id 가 보통 contactId 로 들어가게 될거임
-        Room room = roomService.createRoom(roomRequest.getTarget(), roomRequest.getRoomType());
-        if (room == null) {
+        ChatRoom chatRoom = roomService.createRoom(roomRequest.getTarget(), roomRequest.getSender(), roomRequest.getRoomType());
+        if (chatRoom == null) {
             response = new BaseResponse<>("create room failed");
             return ResponseEntity.badRequest().body(response);
         }
 
         response = new BaseResponse<>(null);
         RoomResponse roomResponse = new RoomResponse();
-        roomResponse.setRoomId(room.getRoomId());
+        roomResponse.setRoomId(chatRoom.getRoomId());
         response.setData(roomResponse);
 
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{roomId}")
+    @DeleteMapping(value = "/{roomId}/close")
     public ResponseEntity<String> closeChat(@PathVariable Long roomId) {
         chatRoom.closeRoom(roomId);
         return ResponseEntity.ok("채팅방이 종료되었습니다.");
+    }
+
+    @DeleteMapping(value = "/{roomId}")
+    public ResponseEntity deleteRoom(@PathVariable Long roomId) {
+        log.info("delete room : {}", roomId);
+        BaseResponse response;
+
+        if (roomId == null) {
+            response = new BaseResponse<>("room_id is empty");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        // TODO :
+
+        response = new BaseResponse<>(null);
+        return ResponseEntity.ok(response);
     }
 
 }

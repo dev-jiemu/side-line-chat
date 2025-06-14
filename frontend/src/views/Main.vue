@@ -9,11 +9,9 @@
             <chatting-list/>
         </v-navigation-drawer>
     </v-app-bar>
-    <v-main>
-        <v-container>
-            <v-btn @click="createChat">
-                New Chat
-            </v-btn>
+    <v-main class="mt-2 ml-5 mr-5 mb-10">
+        <v-container class="text-center align-center d-flex fill-height justify-center">
+            <router-view/>
         </v-container>
     </v-main>
 </template>
@@ -25,7 +23,7 @@ import {storeToRefs} from "pinia";
 import ChattingList from "@/components/ChattingList.vue";
 
 const user = useUserStore();
-const { userInfo, isContact } = storeToRefs(user);
+const { isContact } = storeToRefs(user);
 
 const layout = ref(true)
 const router = useRouter();
@@ -33,10 +31,4 @@ const router = useRouter();
 const updateLayout = () => {
     layout.value = !layout.value;
 }
-
-const createChat = () => {
-    // console.log(userInfo.value)
-
-}
-
 </script>

@@ -12,12 +12,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Room {
+public class ChatRoom {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long roomId;
 
     private String contactId;
+    private String senderId;
     private String roomType;
     private LocalDateTime createdAt;
     private LocalDateTime closedAt;
