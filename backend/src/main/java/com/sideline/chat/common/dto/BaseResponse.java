@@ -1,4 +1,4 @@
-package com.sideline.chat.user.dto;
+package com.sideline.chat.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

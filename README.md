@@ -46,3 +46,12 @@ CREATE TABLE chat_log (
 | /room/:id          | POST   | 사이드 채팅방 생성 (옵저버 -> 상담사)  |
 | /room/:id          | DELETE | 메인 채팅방 삭제                |
 | /room/:id/:side_id | DELETE | 사이드 채팅방 삭제               |
+
+
+### 3. Frontend Router List
+
+Router | Description
+---|---
+/ | 일반 사용자: 채팅 창, 상담사/옵저버: 채팅 리스트 및 채팅창
+/login|상담사 또는 옵저버 로그인 창
+/chat/:id | 채팅방

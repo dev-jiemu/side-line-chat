@@ -13,7 +13,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<User> getUserOne(String userId) {
+    public User getUserOne(String userId) {
         // 삭제 안된 계정 정보만
         return userRepository.findByUserIdAndDeleteYn(userId, "N");
     }

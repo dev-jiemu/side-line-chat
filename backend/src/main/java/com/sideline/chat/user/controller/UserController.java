@@ -1,6 +1,6 @@
 package com.sideline.chat.user.controller;
 
-import com.sideline.chat.user.dto.BaseResponse;
+import com.sideline.chat.common.dto.BaseResponse;
 import com.sideline.chat.user.dto.UserRequest;
 import com.sideline.chat.user.dto.UserResponse;
 import com.sideline.chat.user.entity.User;
@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<BaseResponse<UserResponse>> login(@RequestBody UserRequest userRequest) {
-        log.info("user login request : " + userRequest.toString());
+        log.info("user login request : {}", userRequest.toString());
 
         BaseResponse response;
 
@@ -32,7 +32,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        User user = userService.getUserOne(userRequest.getUserId()).get();
+        User user = userService.getUserOne(userRequest.getUserId());
         if (user == null) {
             response = new BaseResponse<>("user is not found");
             return ResponseEntity.badRequest().body(response);
@@ -43,7 +43,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        response = new BaseResponse<>("");
+        response = new BaseResponse<>(null);
         UserResponse userResponse = new UserResponse();
         userResponse.setAuthType(user.getAuthType());
         response.setData(userResponse);

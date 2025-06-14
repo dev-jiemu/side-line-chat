@@ -7,8 +7,9 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Message {
+@Builder
+public class ChatMessage {
     private Long roomId;
     private String sender; // user_id 또는 난수(고객일때)
-    private String message;
+    private String context;
 }
