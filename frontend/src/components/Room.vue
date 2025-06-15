@@ -34,6 +34,7 @@
                     </v-chip>
                 </div>
             </v-card-text>
+            <!-- TODO : 메인 채팅일때 옵저버는 채팅 못치게 해야하는거 아닌가? -->
             <v-divider/>
             <v-row class="pt-2 pb-1 mt-1 mr-2 align-center text-center">
                 <v-col cols="10">
