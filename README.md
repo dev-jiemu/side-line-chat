@@ -13,7 +13,7 @@ CREATE TABLE chat_user (
 );
 
 CREATE TABLE chat_room (
-    room_id BIGINT PRIMARY KEY,
+    room_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     contact_id VARCHAR(50), -- FK to user(user_id)
     sender_id VARCHAR(50), -- user_id or customer_id
     room_type VARCHAR(10), -- 'main' or 'side'
@@ -23,10 +23,10 @@ CREATE TABLE chat_room (
 );
 
 CREATE TABLE chat_room_link (
-    link_seqno BIGINT PRIMARY KEY, 
+    link_seqno BIGINT PRIMARY KEY AUTO_INCREMENT, 
     user_id VARCHAR(50), -- main 방 기준 user_id
     side_room_id BIGINT, -- 연결된 side 채팅방 room_id
-    delete_yn CHAR(1) -- 'Y' or 'N'
+    main_room_id BIGINT -- 지정 main room id
 );
 
 CREATE TABLE chat_log (

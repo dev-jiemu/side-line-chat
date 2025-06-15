@@ -6,7 +6,7 @@ export default {
     login(userInfo, scb, fcb) {
         let reqUrl = '/user/login'
 
-        axios.get(baseUrl + reqUrl, {
+        axios.post(baseUrl + reqUrl, userInfo,{
             headers: {
                 "Content-Type": "application/json",
             }
@@ -14,7 +14,7 @@ export default {
             console.log('axios result : ', response)
             if (response.status === 200) {
                 if(scb) {
-                    scb(response.data)
+                    scb(response.data.data)
                 }
             } else {
                 if (fcb) {

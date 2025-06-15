@@ -20,6 +20,7 @@
                     >
                     </v-text-field>
                     <v-text-field
+                            type="password"
                             v-model="password"
                             density="compact"
                             placeholder="password"
@@ -67,7 +68,7 @@ const doLogin = () => {
         return
     }
 
-    user.login(userId.value, userId.value, () => {
+    user.login(userId.value, password.value, () => {
         console.log('Login Success')
         router.push('/')
     }, () => {

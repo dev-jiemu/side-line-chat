@@ -1,5 +1,7 @@
 package com.sideline.chat.room.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sideline.chat.room.entity.ChatLog;
 import com.sideline.chat.room.service.ChatLogService;
 import lombok.Getter;
@@ -15,7 +17,7 @@ import java.util.HashMap;
 @Getter
 @Slf4j
 @Component
-public class ChatRoom {
+public class ChatSession {
 
     @Autowired
     private ChatLogService chatLogService;
@@ -69,10 +71,16 @@ public class ChatRoom {
                         try {
                             session.sendMessage(new TextMessage(message));
 
+                            // {"message":"이거 글자 밀리는것"} => 이런 형태로 오네?
+                            // JSON에서 실제 메시지 내용만 추출
+                            ObjectMapper mapper = new ObjectMapper();
+                            JsonNode jsonNode = mapper.readTree(message);
+                            String actualMessage = jsonNode.get("message").asText();
+
                             // 채팅 로그 남김
                             ChatLog chatLog = new ChatLog();
                             chatLog.setRoomId(roomId);
-                            chatLog.setMessage(message);
+                            chatLog.setMessage(actualMessage);
                             chatLog.setSendAt(LocalDateTime.now());
                             chatLog.setDeleteYn("N");
 

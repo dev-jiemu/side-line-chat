@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ChatLogRepository extends JpaRepository<ChatLog, Long> {
-    List<ChatLog> findChatLogByRoomIdAndDeleteYn(Long roomId, String deleteYn);
+    List<ChatLog> findChatLogByRoomIdAndDeleteYnOrderBySendAtAsc(Long roomId, String deleteYn);
 }

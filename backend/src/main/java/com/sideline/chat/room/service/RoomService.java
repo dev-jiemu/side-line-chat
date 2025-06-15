@@ -14,9 +14,12 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    // 상담사별 진행중인 메인 채팅 리스트 조회
-    public List<ChatRoom> getMainRoomListForContactId(String contactId) {
-        return roomRepository.findRoomByContactIdAndDeleteYnAndRoomType(contactId, "N", "main");
+    public List<ChatRoom> getMainRoomOneForContactId(String contactId, String roomType) {
+        return roomRepository.findChatRoomByContactIdAndDeleteYnAndRoomType(contactId, "N", roomType);
+    }
+
+    public List<ChatRoom> getSideRoomList(Long[] roomId) {
+        return roomRepository.findByRoomIdInAndDeleteYn(roomId, "N");
     }
 
     // room id 로 조회
@@ -34,5 +37,10 @@ public class RoomService {
         chatRoom.setDeleteYn("N");
 
         return roomRepository.save(chatRoom);
+    }
+
+    public void updateRoom(ChatRoom chatRoom) {
+        chatRoom.setDeleteYn("Y");
+        roomRepository.save(chatRoom);
     }
 }

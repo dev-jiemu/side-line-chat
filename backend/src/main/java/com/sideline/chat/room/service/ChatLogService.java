@@ -16,15 +16,20 @@ public class ChatLogService {
     private ChatLogRepository chatLogRepository;
 
     public List<ChatLog> getLogList(Long roomId) {
-        return chatLogRepository.findChatLogByRoomIdAndDeleteYn(roomId, "N");
+        return chatLogRepository.findChatLogByRoomIdAndDeleteYnOrderBySendAtAsc(roomId, "N");
     }
 
     public void createChatLog(ChatLog chatLog) {
         chatLogRepository.save(chatLog);
     }
 
-    public void deleteChatLog(Long logSeqno) {
-        chatLogRepository.deleteById(logSeqno);
+    public ChatLog getChatLog(Long logSeqno) {
+        return chatLogRepository.findById(logSeqno).get();
+    }
+
+    public void deleteChatLog(ChatLog chatLog) {
+        chatLog.setDeleteYn("Y");
+        chatLogRepository.save(chatLog);
     }
 
 }

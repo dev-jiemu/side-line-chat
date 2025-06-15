@@ -3,8 +3,6 @@ import {computed, ref} from "vue";
 import userApi from '@/api/user.js'
 
 export const useUserStore = defineStore('user', () => {
-    const roomList = ref([])
-
     const userInfo = ref({
         userId: '',
         authType: ''
@@ -17,7 +15,11 @@ export const useUserStore = defineStore('user', () => {
         }
 
         userApi.login(loginRequest, (data) => {
-            // TODO : Auth type setting
+            let { auth_type } = data;
+
+            userInfo.value.userId = userId;
+            userInfo.value.authType = auth_type;
+
             if (scb) {
                 scb()
             }
@@ -31,14 +33,18 @@ export const useUserStore = defineStore('user', () => {
     }
 
     const isContact = computed(() => {
-        return userInfo.value.authType === 'observer' || userInfo.value.authType === 'contact'
+        return userInfo.value.authType === 'contact'
+    })
+
+    const isObserver = computed(() => {
+        return userInfo.value.authType === 'observer'
     })
 
     const randomUserIdForCustomer = () => {
         const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
         let result = '';
 
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i < 12; i++) {
             result += characters.charAt(Math.floor(Math.random() * characters.length));
         }
 
@@ -46,7 +52,7 @@ export const useUserStore = defineStore('user', () => {
     }
 
     return {
-        roomList, userInfo, login, isContact,
+        userInfo, login, isContact, isObserver,
         randomUserIdForCustomer,
     }
 })

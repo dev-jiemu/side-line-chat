@@ -18,6 +18,6 @@ public class ChatRoomLink {
     private Long linkSeqno;
 
     private String userId;
+    private Long mainRoomId;
     private Long sideRoomId;
-    private String deleteYn; // chat_room 에서 남기는데 여기도 남기면 join 데이터 좀 줄으려나?
 }

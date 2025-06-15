@@ -5,8 +5,8 @@ import roomApi from '@/api/room';
 export const useChatStore = defineStore('chat', () => {
 
     const roomInfo = ref({
-        roomId: '0',
-        sender: 'tester',
+        roomId: '',
+        sender: '',
         target: '',
         roomType: '',
     })
@@ -16,22 +16,19 @@ export const useChatStore = defineStore('chat', () => {
     let socket = null
     const isConnected = ref(false)
 
-    const createChatRoom = (userId, authType, scb, fcb) => {
+    const createChatRoom = (userId, scb, fcb) => {
         let param = {
             target: 'contactor', // TODO : 일단 상담원 fix
             sender: userId,
+            room_type: 'main'
         }
-
-        if (authType && authType === 'observer') {
-            param.roomType = 'side' // 옵저버인 경우 사이드 채널로 설정
-        } else {
-            param.roomType = 'main'
-        }
-
+        
         roomApi.createRoom(param, (result) => {
             let {room_id} = result
             roomInfo.value.roomId = room_id
-
+            roomInfo.value.sender = userId
+            roomInfo.value.target = 'contactor'
+            roomInfo.value.roomType = param.room_type
             if (scb) {
                 scb(room_id)
             }
@@ -42,7 +39,43 @@ export const useChatStore = defineStore('chat', () => {
         })
     }
 
-    const connectWebSocket = (roomId, userId) => {
+    const createSideChatRoom = (userId, roomNo, scb, fcb) => {
+        let param = {
+            target: 'contactor', // TODO : 일단 상담원 fix
+            sender: userId,
+            main_room_id: roomNo,
+            room_type: 'side'
+        }
+
+        roomApi.createSideChatRoom(param, (result) => {
+            let {room_id} = result
+            roomInfo.value.roomId = room_id
+            roomInfo.value.sender = userId
+            roomInfo.value.target = 'contactor'
+            roomInfo.value.roomType = param.room_type
+            if (scb) {
+                scb(room_id)
+            }
+        }, (error) => {
+            if (fcb) {
+                fcb(error)
+            }
+        })
+    }
+
+    const connectWebSocket = async (roomId, userId) => {
+        messageHistory.value = []
+
+        roomApi.getLogList(roomId, (logData) => {
+            messageHistory.value = logData.map(log => ({
+                type: log.sender === userId ? 'send' : 'receive',
+                message: log.message,
+                sender: log.sender,
+                timestamp: log.send_at,
+                log_seqno: log.log_seqno,
+            }))
+        }, () => {})
+
         socket = new WebSocket(`ws://localhost:8080/ws/chat?room_id=${roomId}&user_id=${userId}`)
 
         socket.onopen = () => {
@@ -101,6 +134,7 @@ export const useChatStore = defineStore('chat', () => {
         roomInfo,
         messageHistory,
         createChatRoom,
+        createSideChatRoom,
         connectWebSocket,
         sendMessage,
         disconnect,

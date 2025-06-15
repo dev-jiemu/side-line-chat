@@ -46,6 +46,8 @@ public class UserController {
         response = new BaseResponse<>(null);
         UserResponse userResponse = new UserResponse();
         userResponse.setAuthType(user.getAuthType());
+
+        log.info("user login successful : {}", userResponse.toString());
         response.setData(userResponse);
 
         return ResponseEntity.ok(response);

@@ -1,6 +1,6 @@
 <template>
     <!-- 상담사는 채팅생성 버튼 안보여도 됨 -->
-    <template v-if="roomInfo.roomId === '' && userInfo.authType !== 'contact'">
+    <template v-if="roomInfo.roomId === '' && !isContact && !isObserver">
         <v-btn @click="createChat">
             New Chat
         </v-btn>
@@ -8,10 +8,20 @@
     <template v-else-if="roomInfo.roomId !== ''">
         <v-card width="50%" class="ma-5 pa-5">
             <v-card-title>
-                <v-icon icon="mdi-account-outline" size="small"></v-icon>
-                [ {{roomInfo.sender}} ] is Chat Room
+                <v-row class="align-center fill-height">
+                    <v-col cols="10">
+                        <v-icon icon="mdi-account-outline" size="small"></v-icon>
+                        [ {{ roomInfo.sender || roomInfo.sender_id }} ] is Chat Room
+                    </v-col>
+                    <v-col cols="2" class="text-center">
+                        <v-btn v-if="roomInfo.roomType || roomInfo.room_type === 'side' && isContact " icon="mdi-trash-can-outline" variant="text" size="x-small"
+                               @click="deleteSideChat(roomInfo.roomId || roomInfo.room_id)"/>
+                        <v-btn icon="mdi-close" variant="text" size="x-small" @click="closeChatting"/>
+                    </v-col>
+                </v-row>
+
             </v-card-title>
-            <v-divider class="pb-3"/>
+            <v-divider class="pb-3 mt-1"/>
             <v-card-text class="pa-2 mt-2" style="height: 450px; overflow-y: auto;">
                 <div v-for="(msg, index) in messageHistory" :key="index"
                      :class="msg.type === 'send' ? 'text-right mb-2' : 'text-left mb-2'">
@@ -20,6 +30,7 @@
                             :class="msg.type === 'send' ? 'ml-auto' : 'mr-auto'"
                             style="max-width: 70%; word-wrap: break-word;">
                         {{ msg.message }}
+                        <v-btn v-if="isContact" variant="text" size="x-small" icon="mdi-close" @click="logDelete(msg.log_seqno)"/>
                     </v-chip>
                 </div>
             </v-card-text>
@@ -31,7 +42,7 @@
                             density="compact"
                             hide-details="auto"
                             variant="outlined"
-                            @keydown.enter="sendMessage"
+                            @keyup.enter="sendMessage"
                             v-model="message"/>
                 </v-col>
                 <v-col cols="2" class="text-center">
@@ -47,12 +58,15 @@ import {useUserStore} from "@/stores/user.js";
 import {storeToRefs} from "pinia";
 import {useChatStore} from "@/stores/chat.js";
 import {onMounted, onUnmounted, ref} from "vue";
+import {useRoomStore} from "@/stores/room.js";
 
 const user = useUserStore();
-const { userInfo } = storeToRefs(user);
+const { userInfo, isContact, isObserver } = storeToRefs(user);
 
 const chat = useChatStore();
 const { roomInfo, messageHistory } = storeToRefs(chat);
+
+const room = useRoomStore();
 
 const message = ref('')
 
@@ -64,10 +78,7 @@ const createChat = () => {
         userInfo.value.userId = user.randomUserIdForCustomer()
     }
 
-    // 옵저버 계정이면 authType 보내야함
-    let authType = userInfo.value.authType === 'observer' ? userInfo.value.authType : ''
-
-    chat.createChatRoom(userInfo.value.userId, authType, (roomId) => {
+    chat.createChatRoom(userInfo.value.userId, (roomId) => {
         // 방 생성 완료되면 websocket connnect
         chat.connectWebSocket(roomId, userInfo.value.userId)
     }, (error) => {
@@ -76,12 +87,34 @@ const createChat = () => {
 }
 
 const sendMessage = () => {
+    if (!message.value.trim()) return; // 빈 메시지 방지
+    
     console.log('sendMessage : ', message.value)
     chat.sendMessage(message.value)
+    message.value = '' // 메시지 전송 후 초기화
+}
+
+const closeChatting = () => {
+    chat.disconnect()
+    messageHistory.value = []
+
+    // 화면에서 제거
+    roomInfo.value.roomId = ""
+}
+
+const logDelete = (logSeqno) => {
+    // TODO : 채팅 데이터 삭제도 필요하려나...?
+}
+
+const deleteSideChat = (roomId) => {
+    console.log(roomId)
+    room.deleteRoom(roomId, () =>{
+        // TODO : next job?
+    }, () => {})
 }
 
 onMounted(() => {
-
+    // console.log(JSON.stringify(userInfo.value))
 })
 
 onUnmounted(() => {

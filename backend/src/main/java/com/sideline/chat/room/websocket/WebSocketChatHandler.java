@@ -1,6 +1,6 @@
 package com.sideline.chat.room.websocket;
 
-import com.sideline.chat.room.dto.ChatRoom;
+import com.sideline.chat.room.dto.ChatSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.HashMap;
 public class WebSocketChatHandler extends TextWebSocketHandler {
 
     @Autowired
-    private ChatRoom chatRoom;
+    private ChatSession chatRoom;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -63,7 +63,11 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
         if (roomId != null && userId != null) {
             chatRoom.removeSession(roomId, userId);
-            chatRoom.sendMessage(roomId, session, userId + "님이 채팅방을 나갔습니다.");
+            String jsonMessage = String.format(
+                    "{\"message\":\"%s\",\"type\":\"system\",\"sender\":\"system\"}",
+                    userId + "님이 채팅방을 나갔습니다."
+            );
+            chatRoom.sendMessage(roomId, session, jsonMessage);
         }
     }
 
