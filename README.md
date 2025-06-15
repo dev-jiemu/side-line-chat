@@ -125,9 +125,12 @@ cd backend
 Default Port : `8080`
 서버 초기 실행시 h2 database 에 상담사, 옵저버 계정이 기본으로 들어갑니다.
 
-`테스트 계정`
-- 상담원 : contactor / test
-- 옵저버 : observer / test
+* 테스트 계정
+
+`상담원` : contactor / test
+
+`옵저버` : observer / test
+
 
 - Frontend
 ```shell
