@@ -115,7 +115,7 @@ CREATE TABLE chat_log (
 ```
 
 
-### 4. 프로젝트 실행
+### 4. 프로젝트 실행 및 테스트 방법
 - Backend
 ```shell
 cd backend
@@ -140,6 +140,10 @@ npm run dev
 ```
 
 Default Port : `5173`
+
+테스트 방법:
+- 일반 고객 기능 테스트 : http://localhost:5173 으로 접속하면 바로 채팅생성 버튼이 나옵니다.
+- 옵저버 또는 상담사 기능 테스트 : http://localhost:5173/agent 으로 접속하면 로그인 화면이 나옵니다. 로그인 후 상담사, 옵저버가 접근할 수 있는 채팅 리스트가 좌측에 노출됩니다.
 
 ### 5. 🔗 Backend API Endpoints
 
